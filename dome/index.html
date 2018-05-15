@@ -4,8 +4,6 @@
 	<meta charset="UTF-8">
 	<title>Document</title>
     <style>
-        body{
-        }
         .bg{
             position: absolute;
             top: 0;
@@ -20,27 +18,27 @@
         ul{
             width: 1000px;
             margin: 0 auto;
-            opacity: .7
         }
         li{
+            color: #fff;
             margin-bottom: 10px;
             list-style: none;
-            background: #fff;
+            background: rgba(0, 0, 0, .4);
             box-sizing: border-box;
             padding: 15px;
         }
+
         li h2{
         }
         li div{
-
         }
 
     </style>
 </head>
-<body v-cloak>
-    <img src="./timg.jpeg" alt="" class="bg">
-    <div class="con" id="app">
-        <div class="add" >
+<body >
+    <div id="app" v-cloak>
+        <img src="./bg2.jpeg" alt="" class="bg">
+        <div class="add">
             <input type="text" value='这个是标题' v-model="item.title">
             <input type="text" value='这个是内容' v-model="item.con">
             <span @click="add">添加</span>
@@ -50,15 +48,21 @@
             <span onclick="searchAll()">搜索全部</span>
             <span onclick="searchLength()">搜索长度</span>
         </div>
-        <ul>
-            <li v-for='i in list' >
-                <h2>{{i.title}}</h2>
-                <div>
-                    {{i.con}}
-                </div>
-            </li>
-        </ul>
+        <div class="con" >
+            <ul>
+                <li v-for='i in list' >
+                    <h2>{{i.title}}</h2>
+                    <div>
+                        {{i.con}}
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="">
+            
+        </div>
     </div>
+    
 	<script src="./nebulas.js"></script>
 	<script src="./nebPay.js"></script>
     <script src="./until.js"></script>
