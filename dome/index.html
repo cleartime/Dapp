@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+    <style>
+        body{
+        }
+        .bg{
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            filter: blur(2px);  
+            z-index: -1
+        }
+        ul{
+            width: 1000px;
+            margin: 0 auto;
+            opacity: .7
+        }
+        li{
+            margin-bottom: 10px;
+            list-style: none;
+            background: #fff;
+            box-sizing: border-box;
+            padding: 15px;
+        }
+        li h2{
+        }
+        li div{
+
+        }
+
+    </style>
+</head>
+<body v-cloak>
+    <img src="./timg.jpeg" alt="" class="bg">
+    <div class="con" id="app">
+        <div class="add" >
+            <input type="text" value='这个是标题' v-model="item.title">
+            <input type="text" value='这个是内容' v-model="item.con">
+            <span @click="add">添加</span>
+            <span onclick="search()">搜索</span>
+             <span onclick="del()">删除</span>
+             <span onclick="delAll()">删除全部</span>
+            <span onclick="searchAll()">搜索全部</span>
+            <span onclick="searchLength()">搜索长度</span>
+        </div>
+        <ul>
+            <li v-for='i in list' >
+                <h2>{{i.title}}</h2>
+                <div>
+                    {{i.con}}
+                </div>
+            </li>
+        </ul>
+    </div>
+	<script src="./nebulas.js"></script>
+	<script src="./nebPay.js"></script>
+    <script src="./until.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.0/vue.js"></script>
+	<script>
+        var api = new until('n1fUTDjA1h1xHeTCxiYqqtx3MT6hNqcjbZG');
+
+        function search(){
+            api.get(0).then(r=>{
+                console.log(r)
+            })
+        }
+
+        function searchLength(){
+            api.len().then(r=>{
+                console.log(r)
+            })
+        }
+        new Vue({
+            el:'#app',
+            data(){
+                return {
+                    item:{
+                        title: '',
+                        con: ''
+                    },
+                    list: []
+                }
+            },
+            created(){
+                api.getAll().then(r=>this.list = r.filter(t=>t.title))
+            },
+            methods: {
+                add(){
+                    api.set(this.item)
+                }
+            },
+            watch: {
+            }
+        })
+        
+	</script>	
+</body>
+</html>
