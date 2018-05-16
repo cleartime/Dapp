@@ -13,9 +13,9 @@ function checkNebpay() {
         alert("Extension wallet is not installed, please install it first.")
     } else {}
 }
-let nebulas = require("nebulas"),
-    Account = nebulas.Account,
-    neb = new nebulas.Neb();
+let nebulas = require("nebulas");
+ let   Account = nebulas.Account;
+ let   neb = new nebulas.Neb();
 neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
 let from = Account.NewAccount().getAddressString();
 
@@ -23,7 +23,7 @@ let NebPay = require("nebpay"); //https://github.com/nebulasio/nebPay
 let nebPay = new NebPay();
 let funcIntervalQuery
 var serialNumber
-class until {
+ class Api {
     constructor(dappAddress) {
         this.dappAddress = dappAddress;
     }
@@ -120,3 +120,5 @@ class until {
       
     }
 }
+
+export default Api

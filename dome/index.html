@@ -3,6 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+
     <style>
         .bg{
             position: absolute;
@@ -32,34 +35,67 @@
         }
         li div{
         }
-
+        .mask{
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            background: rgba(0, 0, 0, .5)
+        }
+        .add{
+            text-align: center;
+            width: 200px;
+            position: absolute;
+            left: 50%;
+            margin-left: -100px;
+        }
+        .add input{
+            border-radius: 5px;
+            padding-left: 10px;
+            display: block;
+            line-height: 30px;
+            margin-top: 20px;
+            border: none;
+            outline: none;
+        }
+        .add span{
+            background: #713d00;
+            padding: 10px;
+            color: #fff;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body >
-    <div id="app" v-cloak>
-        <img src="./bg2.jpeg" alt="" class="bg">
-        <div class="add">
-            <input type="text" value='这个是标题' v-model="item.title">
-            <input type="text" value='这个是内容' v-model="item.con">
-            <span @click="add">添加</span>
-            <span onclick="search()">搜索</span>
-             <span onclick="del()">删除</span>
-             <span onclick="delAll()">删除全部</span>
-            <span onclick="searchAll()">搜索全部</span>
-            <span onclick="searchLength()">搜索长度</span>
-        </div>
-        <div class="con" >
-            <ul>
-                <li v-for='i in list' >
-                    <h2>{{i.title}}</h2>
-                    <div>
-                        {{i.con}}
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="">
-            
+    <div id="app" v-cloak >
+        <div>
+            <img src="./bg2.jpeg" alt="" class="bg">
+            <div class="mask" v-if='mask'></div>
+            <div @click="mask=!mask"><span>我也要喊话</span></div>
+            <div class="add" v-if='mask'>
+                <input type="text" placeholder="您的昵称" v-model="item.title">
+                <input type="text" placeholder='您想说的话' v-model="item.con">
+                <span @click="add">添加</span>
+                <!-- <span onclick="search()">搜索</span> -->
+              <!--    <span onclick="del()">删除</span>
+                 <span onclick="delAll()">删除全部</span>
+                <span onclick="searchAll()">搜索全部</span>
+                <span onclick="searchLength()">搜索长度</span> -->
+            </div>
+            <div class="con" >
+                <ul>
+                    <li v-for='i in list' >
+                        <h2>{{i.title}}</h2>
+                        <div>
+                            {{i.con}}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="">
+                
+            </div>
         </div>
     </div>
     
@@ -69,6 +105,8 @@
     <script src="https://cdn.bootcss.com/vue/2.5.0/vue.js"></script>
 	<script>
         var api = new until('n1fUTDjA1h1xHeTCxiYqqtx3MT6hNqcjbZG');
+        var time = null;
+
 
         function search(){
             api.get(0).then(r=>{
@@ -85,6 +123,9 @@
             el:'#app',
             data(){
                 return {
+                    loading: false,
+                    serialNumber: false,
+                    mask: true,
                     item:{
                         title: '',
                         con: ''
@@ -93,14 +134,35 @@
                 }
             },
             created(){
-                api.getAll().then(r=>this.list = r.filter(t=>t.title))
+                this.init();
             },
             methods: {
+                init(){
+                    api.getAll().then(r=>this.list = r.filter(t=>t.title))
+                },
                 add(){
-                    api.set(this.item)
+                    api.set(this.item).then(r=>{
+                        this.serialNumber = r;
+                    })
+                },
+                query(){
+                    this.loading = true;
+                    api.query(this.serialNumber).then(r=>{
+                        if (!r.code) {
+                           
+                            this.list.push(this.item)
+                            clearInterval(time);
+                            time = null;
+                        }
+                    })
                 }
             },
             watch: {
+                serialNumber(){
+                    time = setInterval(()=>{
+                        this.query()
+                    },3000)
+                }
             }
         })
         
