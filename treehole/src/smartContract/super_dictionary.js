@@ -24,7 +24,7 @@ SampleContract.prototype = {
         if(number > this.size){
           end = this.size;
         }
-          for(var i=0;i<end;i++){
+          for(var i=star;i<end;i++){
             result.push(this.arrayMap.get(i))
           }
           return result

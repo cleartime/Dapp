@@ -27,6 +27,19 @@ var serialNumber
     constructor(dappAddress) {
         this.dappAddress = dappAddress;
     }
+    search(title){
+        
+        return new Promise((resole,reject)=>{
+			this.getAll().then(r=>{
+                if(!title) {
+                    r = r.filter(t => t && t.title)
+                }else{
+                    r = r.filter(t => t && t.title === title)
+                }
+                resole(r)
+            })
+       })
+    }
     set(obj) {
         let to = this.dappAddress;
         let value = "0";
@@ -38,13 +51,13 @@ var serialNumber
             listener: cbPush //设置listener, 处理交易返回信息
         }));
     }
-     get(index){
+     get(start,end, filter){
 	 	var value = "0";
         var nonce = "0"
         var gas_price = "1000000"
         var gas_limit = "2000000"
         var callFunction = "get";
-        var callArgs = "[\"" + index + "\"]"; //in the form of ["args"]
+        var callArgs = "[\"" + start + "\",\"" + end + "\"]"
         var contract = {
             "function": callFunction,
             "args": callArgs
@@ -52,7 +65,12 @@ var serialNumber
 
        return new Promise((resole,reject)=>{
 			neb.api.call(from, this.dappAddress, value, nonce, gas_price, gas_limit, contract).then( (resp) =>{
-	            resole(JSON.parse(resp.result))
+                let res = JSON.parse(resp.result);
+                if(filter){
+                    let {key, value} = filter;
+                    res = res.filter(t => t[key]===value)
+                }
+	            resole(res)
 	        }).catch( (err)=> {
 	            reject(err.message)
 	        })
@@ -78,7 +96,7 @@ var serialNumber
 			        })
        })
     }
-    getAll(){
+    getAll(filter){
 	 	var value = "0";
         var nonce = "0"
         var gas_price = "1000000"
@@ -91,11 +109,16 @@ var serialNumber
         }
 
        return new Promise((resole,reject)=>{
-			neb.api.call(from, this.dappAddress, value, nonce, gas_price, gas_limit, contract).then( (resp) =>{
-						let res = JSON.parse(resp.result);
+			neb.api.call(from, this.dappAddress, value, nonce, gas_price, gas_limit, contract).then( (res) =>{
 						console.log('返回全部结果如下：')
-						console.log(res)
-			            resole(res)
+                        res = JSON.parse(res.result);
+                        console.log(res)
+                        
+                        if(filter){
+                            let {key, value} = filter;
+                            res = res.filter(t => t[key]===value)
+                        }
+			            resole(res.length)
 			        }).catch( (err)=> {
 			            reject(err.message)
 			        })
