@@ -3,13 +3,12 @@
 let nebulas = require("nebulas");
 let Account = nebulas.Account;
 let neb = new nebulas.Neb();
-neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
+neb.setRequest(new nebulas.HttpRequest("https://Mainnet.nebulas.io"));
 let from = Account.NewAccount().getAddressString();
 
 let NebPay = require("nebpay"); //https://github.com/nebulasio/nebPay
 let nebPay = new NebPay();
-let funcIntervalQuery
-var serialNumber
+
 class Api {
   constructor(dappAddress) {
     this.dappAddress = dappAddress;

@@ -1,24 +1,35 @@
 <template>
   <div id="app">
     <div class="nav">
-      <img src="./assets/logo.png" alt="" @click='init'>
-      <div>
-        <el-input placeholder="搜索作品、资源" v-model="searchTitle">
-          <i slot="prefix" class="el-input__icon el-icon-search" @click='search'></i>
-        </el-input>
-        <el-tabs @tab-click="tab" v-model="activeName">
-          <el-tab-pane label="优秀作品" name="1">优秀作品</el-tab-pane>
-          <el-tab-pane label="学习资源" name="2">学习资源</el-tab-pane>
-          <el-tab-pane label="作品排行榜" name="3">优秀作品排行榜</el-tab-pane>
-          <el-tab-pane label="资源排行榜" name="4">优秀资源排行榜</el-tab-pane>
-          <el-tab-pane label="我有作品" name="5">我有作品</el-tab-pane>
-          <el-tab-pane label="我有资源" name="6">我有资源</el-tab-pane>
-        </el-tabs>
+      <div class="nav-con">
+        <img src="./assets/logo.png" alt="" @click='init()'>
+        <div>
+          <el-input placeholder="搜索作品、资源" v-model="searchTitle">
+            <i slot="prefix" class="el-input__icon el-icon-search" @click='search'></i>
+          </el-input>
+          <el-tabs @tab-click="tab" v-model="activeName">
+            <el-tab-pane label="优秀作品" name="1">优秀作品</el-tab-pane>
+            <el-tab-pane label="学习资源" name="2">学习资源</el-tab-pane>
+            <el-tab-pane label="作品排行榜" name="3">优秀作品排行榜</el-tab-pane>
+            <el-tab-pane label="资源排行榜" name="4">优秀资源排行榜</el-tab-pane>
+            <el-tab-pane label="我有作品" name="5">我有作品</el-tab-pane>
+            <el-tab-pane label="我有资源" name="6">我有资源</el-tab-pane>
+          </el-tabs>
+        </div>
       </div>
     </div>
-    <div class="list" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255,.5)">
+    <div class="list" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="#edf1f4">
+      <transition name="bouncelnUp" mode="out-in" :key="pro.title">
+        <div class="info" v-if="pro.title && filter.value === 'product'">
+          <img :src="pro.imgurl" alt="">
+          <div>
+            <h2>{{pro.title}}</h2>
+            <p>{{pro.description}}</p>
+          </div>
+        </div>
+      </transition>
       <ul class='list-item' :class="filter.value === 'product' ? 'product' : 'resource'">
-        <li v-for="(i, index) in list" :key="index" class="item" :class="filter.value === 'product' ? 'product' : 'resource'" v-if='index<10' @click='go(i.url,1)'>
+        <li v-for="(i, index) in list" :key="index" class="item" :class="filter.value === 'product' ? 'product' : 'resource'" v-if='index<10' @click='go(i.url,1)' @mouseover="test($event,i)">
           <div class="top" v-if="filter.value === 'product'">
             <img :src="i.imgurl" alt="">
           </div>
@@ -61,7 +72,7 @@
         </el-form>
       </el-dialog>
     </div>
-  
+
   </div>
 </template>
 
@@ -70,12 +81,13 @@
   import {
     upload
   } from './untils/index'
-  let api = new Api('n1urT5iXQcDHXvSg2e6Kk4wa9Lhgs94z9iX');
+  let api = new Api('n1y8KVcJvngDNGtnHQPe5J8W3iHhkNJiTHc');
   let time = null;
   export default {
     name: 'App',
     data() {
       return {
+        pro:{},
         loading: false,
         activeName: '1',
         searchTitle: '',
@@ -106,24 +118,33 @@
       this.init();
     },
     mounted(){
-
-      //to check if the extension is installed
-      //if the extension is installed, var "webExtensionWallet" will be injected in to web page
-      if (typeof (webExtensionWallet) === "undefined") {
-         this.$alert('请先在谷歌浏览器安装星云链钱包插件', '提示', {
-          confirmButtonText: '确定',
-          callback: action => {
-            this.$message({
-              type: 'info',
-              message: `action: ${ action }`
-            });
-            window.open('https://github.com/ChengOrangeJu/WebExtensionWallet');
-          }
-        });
-      } else {}
+      this.getout();
     },
     methods: {
+      test(e, obj){
+          this.pro = obj;
+      },
+        getout(){
+          if (typeof (webExtensionWallet) === "undefined") {
+            this.$alert('请先在谷歌浏览器安装星云链钱包插件', '提示', {
+              confirmButtonText: '确定',
+              callback: action => {
+                if(action === 'confirm'){
+                  window.open('https://github.com/ChengOrangeJu/WebExtensionWallet');
+                  return
+                }
+                this.$message({
+                  type: 'warning',
+                  message: `没有装插件不能添加哦！`
+                });
+              }
+            });
+            return false
+          }
+          return true
+        },
       init(obj) {
+        this.pro = {};
         if (obj) {
           this.list = []
           this.filter.value = obj.type === 'product' ? "product" : "resource";
@@ -131,7 +152,7 @@
         this.loading = !this.loading;
         this.len().then(() => {
           api.get(this.start, this.end, this.filter).then(r => {
-  
+
             this.list = r;
             if (obj) {
               console.log('返回得list是')
@@ -144,8 +165,8 @@
             this.reset();
           })
         });
-  
-  
+
+
       },
       change(num) {
         this.start = (num - 1) * 10;
@@ -191,13 +212,19 @@
           this.$refs.url.focus();
           return
         }
-        
+
         this.loading = !this.loading;
         api.set(this.item).then(r => {
+          this.$message({
+            message: `添加${this.title}成功！`,
+            type: 'success'
+          });
           this.start = 0;
           this.end = 10;
           this.loading = !this.loading;
-          this.serialNumber = r;
+          this.dialogTableVisible = false;
+          this.init(this.item);
+//          this.serialNumber = r;
         })
       },
       query() {
@@ -220,6 +247,7 @@
         this.start = 0;
         this.end = 10;
         this.total = 10;
+        this.pro = {};
         this.loading = !this.loading;
         if(!this.searchTitle){
           this.init();
@@ -236,6 +264,7 @@
         window.open(url);
       },
       addlist() {
+        if(!this.getout()) return
         if (this.filter.value === 'product') {
           this.dialogTableVisible = !this.dialogTableVisible;
           this.title = '作品';
@@ -249,18 +278,6 @@
         this.dialogTitle = `我有${this.title}`;
       },
       tab(e) {
-        this.reset();
-        this.start = 0;
-        this.end = 10;
-        this.total = 10;
-        if (e.paneName === '1') {
-          this.filter.value = 'product';
-          this.init();
-        }
-        if (e.paneName === '2') {
-          this.filter.value = 'resource';
-          this.init();
-        }
         if (e.paneName === '3') {
           this.$notify.info({
             title: '消息',
@@ -275,12 +292,26 @@
           });
           return
         }
+        this.reset();
+        this.start = 0;
+        this.end = 10;
+        this.pro = {};
+        if (e.paneName === '1') {
+          this.filter.value = 'product';
+          this.init();
+        }
+        if (e.paneName === '2') {
+          this.filter.value = 'resource';
+          this.init();
+        }
         if (e.paneName === '5') {
+          if(!this.getout()) return
           this.dialogTableVisible = !this.dialogTableVisible;
           this.title = '作品';
           this.item.type = 'product';
         }
         if (e.paneName === '6') {
+          if(!this.getout()) return
           this.dialogTableVisible = !this.dialogTableVisible;
           this.title = '资源';
           this.item.type = 'resource';
@@ -318,34 +349,52 @@
 </script>
 
 <style lang='scss'>
-  #app {
-    background: url('../static/bg.jpg') no-repeat center center;
-    background-size: 100% 100%;
+
+  /**从上往下**/
+
+  .bouncelnUp-enter-active,
+  .bouncelnUp-leave-active {
+    transition: all .3s;
+  }
+
+  .bouncelnUp-enter,
+  .bouncelnUp-leave-active {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  html,body,#app {
+    background: #edf1f4;
     min-height: 100vh;
   }
-  
-  .nav {
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-    padding: 30px 0 50px;
-    width: 1000px;
-    display: flex;
-    &>div {
+  .nav{
+    background: #fff;
+    .nav-con {
+      width: 1200px;
+      margin: 0 auto 30px;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 0px;
       display: flex;
-      justify-content: flex-end;
-      flex: 1;
-      .el-input {
-        height: 30px;
-        margin-right: 20px;
-        width: 150px;
+      img{
+        cursor: pointer;
+      }
+      &>div {
+        display: flex;
+        justify-content: flex-end;
+        flex: 1;
+        .el-input {
+          height: 30px;
+          margin-right: 20px;
+          width: 150px;
+        }
+      }
+      .el-tabs__item {
+        padding: 0 10px
       }
     }
-    .el-tabs__item {
-      padding: 0 10px
-    }
   }
-  
+
+
   .list {
     width: 1000px;
     margin: auto;
@@ -377,16 +426,26 @@
         &:nth-child(11) {
           margin-left: 0;
         }
+        .avatar-uploader-icon {
+          width: 100%;
+          height: 100%;
+          display: flex;
+        }
         &:hover {
           transform: translateY(-16px) scale(1.1);
           box-shadow: 1px 1px 3px 3px #ddd;
         }
         .top {
           height: 50%;
+          width: 150px;
+          border-radius: 50%;
+          border: 1px solid #edf1f4;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           img {
-            border-radius: 50%;
-            height: 100px;
-            width: 100px;
+            width: 100%;
           }
         }
         .bottom {
@@ -406,9 +465,13 @@
             font-size: 14px;
             line-height: 20px;
             display: -webkit-box;
+            // eslint-disable-next-line
+            /* autoprefixer: off */
             -webkit-box-orient: vertical;
+            /* autoprefixer: on */
             -webkit-line-clamp: 3;
             overflow: hidden;
+            text-overflow: ellipsis;
           }
         }
       }
@@ -423,7 +486,7 @@
         border-bottom: 1px solid #eee;
         transition: all .5s;
         &:hover{
-          transform: translateY(-16px) scale(1.1);
+          transform: translateY(-10px) scale(1.1);
           box-shadow: 1px 1px 3px 3px #ddd;
           background-color: #f7f7f7;
         }
@@ -445,8 +508,12 @@
           height: 20px;
         }
         &.plus {
+          margin-top: 20px;
           cursor: pointer;
-          text-align: center
+          text-align: center;
+          .el-icon-plus.avatar-uploader-icon{
+            width: 100%;
+          }
         }
       }
     }
@@ -454,12 +521,30 @@
       padding: 20px 0 40px;
       text-align: center;
     }
+    .info{
+      margin-bottom: 30px;
+      padding: 10px;
+      background: #fff;
+      height: 100px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      img{
+        width: 100px;
+        margin: 0 20px;
+      }
+      div{
+        flex: 1;
+        line-height: 30px;
+      }
+    }
   }
-  
+
   .el-tabs__content {
     display: none
   }
-  
+
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -467,11 +552,11 @@
     position: relative;
     overflow: hidden;
   }
-  
+
   .avatar-uploader .el-upload:hover {
     border-color: #409EFF;
   }
-  
+
   .avatar-uploader-tip {
     position: absolute;
     top: 20px;
@@ -480,7 +565,7 @@
     right: 0;
     color: red
   }
-  
+
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
@@ -488,11 +573,31 @@
     height: 178px;
     line-height: 178px;
     text-align: center;
+    display: flex!important;
+    align-items: center!important;
+    justify-content: center!important;
   }
-  
+
   .avatar {
     width: 178px;
-    height: 178px;
     display: block;
+  }
+  .el-tabs__item.is-active{
+    color: #039ee8;
+  }
+  .el-pager li.active{
+    color: #039ee8;
+  }
+  .el-loading-spinner .el-loading-text{
+    color: #039ee8;
+  }
+  .el-pagination.is-background .el-pager li:not(.disabled).active{
+    background: #039ee8;
+  }
+  .el-button--primary{
+    background: #039ee8;
+  }
+  .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+    background: #fff;
   }
 </style>
