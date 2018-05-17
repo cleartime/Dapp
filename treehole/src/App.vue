@@ -18,7 +18,7 @@
     </div>
     <div class="list" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255,.5)">
       <ul class='list-item' :class="filter.value === 'product' ? 'product' : 'resource'">
-        <li v-for="(i, index) in list" :key="index" class="item" :class="filter.value === 'product' ? 'product' : 'resource'" v-if='index<10'>
+        <li v-for="(i, index) in list" :key="index" class="item" :class="filter.value === 'product' ? 'product' : 'resource'" v-if='index<10' @click='go(i.url,1)'>
           <div class="top" v-if="filter.value === 'product'">
             <img :src="i.imgurl" alt="">
           </div>
@@ -230,8 +230,9 @@
           this.list = r
         })
       },
-      go(url) {
+      go(url,type) {
         if (!url) return
+        if(type && this.filter.value === 'resource') return
         window.open(url);
       },
       addlist() {
@@ -318,7 +319,7 @@
 
 <style lang='scss'>
   #app {
-    background: url('./assets/bg.jpg') no-repeat center center;
+    background: url('../static/bg.jpg') no-repeat center center;
     background-size: 100% 100%;
     min-height: 100vh;
   }
