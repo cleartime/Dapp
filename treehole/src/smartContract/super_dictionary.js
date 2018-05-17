@@ -27,14 +27,14 @@ SampleContract.prototype = {
           for(var i=star;i<end;i++){
             result.push(this.arrayMap.get(i))
           }
-          return result
+          return result.reverse()
     },
     getAll(){
         var result =[];
           for(var i=0;i<this.size;i++){
             result.push(this.arrayMap.get(i))
           }
-          return result
+          return result.reverse()
     },
     // del(index){
     //    if(!this.get(index))return
