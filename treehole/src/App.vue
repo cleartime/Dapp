@@ -171,6 +171,7 @@
       change(num) {
         this.start = (num - 1) * 10;
         this.end = this.start + 10;
+        window.scroll(0,0)
         this.init();
       },
       len() {
@@ -295,6 +296,7 @@
         this.reset();
         this.start = 0;
         this.end = 10;
+        this.total = 10;
         this.pro = {};
         if (e.paneName === '1') {
           this.filter.value = 'product';
@@ -354,7 +356,7 @@
 
   .bouncelnUp-enter-active,
   .bouncelnUp-leave-active {
-    transition: all .3s;
+    transition: all .3s .3s;
   }
 
   .bouncelnUp-enter,
