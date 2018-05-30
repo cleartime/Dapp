@@ -1,57 +1,49 @@
-"use strict";
+'use strict';
 
 var SampleContract = function () {
-   LocalContractStorage.defineMapProperty(this, "arrayMap");
-   LocalContractStorage.defineProperty(this, "size");
+   LocalContractStorage.defineMapProperty(this, "category");
 };
 
-
 SampleContract.prototype = {
-    init() {
-        this.size = 0;
+    init: function () {
     },
-    set(option){
-        var index = this.size;
-        this.arrayMap.set(index, option);
-        this.size +=1;
+    set: function (name, value) {
+      this.category.set(name,value);
+        LocalContractStorage.set(name, value);
+        // 存储字符串
+        LocalContractStorage.set("name",name);
+        // 存储数字
+        LocalContractStorage.set("value", value);
+        // 存储对象
+        LocalContractStorage.set("obj", {name:name,value:value});
     },
-    get(star, end){
-        if(!end){
-            return this.getOne(star);
-        }
-        var result =[];
-        var number = end-star;
-        if(number > this.size){
-          end = this.size;
-        }
-          for(var i=0;i<end;i++){
-            result.push(this.arrayMap.get(i))
-          }
-          return result
+    getname: function(name){
+        return LocalContractStorage.set(name);
     },
-    getAll(){
-        var result =[];
-          for(var i=0;i<this.size;i++){
-            result.push(this.arrayMap.get(i))
-          }
-          return result
+    getvalue: function(){
+        return LocalContractStorage.get("value");
     },
-    // del(index){
-    //    if(!this.get(index))return
-    //     for(var i = index;i<this.size;i++){
-    //         var num = i;
-    //         var local = this.get(num+1);
-    //         this.arrayMap.set(i-1,local);
-    //     }
-    //     this.size--
-    //     return this.get(index)
-    // },
-    getOne(index){
-        return this.arrayMap.get(index);
+    get: function (name) {
+      var obj = this.category.get(name)
+        return obj
     },
-    len(){
-      return this.size;
+    delname: function (name) {
+      var obj = this.category.del(name)
+
+        var result = LocalContractStorage.delete(name);
+        console.log("del result:"+result)
+        return obj
     },
+    delvalue: function () {
+        var result = LocalContractStorage.delete("value");
+        console.log("del result:"+result)
+        return result
+    },
+    del: function () {
+        var result = LocalContractStorage.delete("obj");
+        console.log("del result:"+result)
+        return result
+    }
 };
 
 module.exports = SampleContract;

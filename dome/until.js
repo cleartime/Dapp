@@ -28,10 +28,13 @@ class until {
         this.dappAddress = dappAddress;
     }
     set(obj) {
+        let start = 'abc';
+        let end = 'abcd';
         let to = this.dappAddress;
         let value = "0";
         let callFunction = "set"
-        let callArgs = "[" + JSON.stringify(obj) + "]"
+        let callArgs = "[\"" + start + "\",\"" + end + "\"]"
+        // let callArgs = "[" + JSON.stringify(obj) + "]"
         // var callArgs = "[\"" + JSON.stringify(str) + "\"]"
         let cbPush = this.res;
         return Promise.resolve(nebPay.call(to, value, callFunction, callArgs, { //使用nebpay的call接口去调用合约,
@@ -41,10 +44,11 @@ class until {
      get(index){
 	 	var value = "0";
         var nonce = "0"
+        var start = 'abc';
         var gas_price = "1000000"
         var gas_limit = "2000000"
         var callFunction = "get";
-        var callArgs = "[\"" + index + "\"]"; //in the form of ["args"]
+        var callArgs = "[\"" + start + "\"]"; //in the form of ["args"]
         var contract = {
             "function": callFunction,
             "args": callArgs
@@ -56,6 +60,27 @@ class until {
 	        }).catch( (err)=> {
 	            reject(err.message)
 	        })
+       })
+    }
+    del(index){
+        var value = "0";
+        var nonce = "0"
+        var start  = 'abc';
+        var gas_price = "1000000"
+        var gas_limit = "2000000"
+        var callFunction = "delname";
+        var callArgs = "[\"" + start + "\"]"; //in the form of ["args"]
+        var contract = {
+            "function": callFunction,
+            "args": callArgs
+        }
+
+       return new Promise((resole,reject)=>{
+            neb.api.call(from, this.dappAddress, value, nonce, gas_price, gas_limit, contract).then( (resp) =>{
+                resole(JSON.parse(resp.result))
+            }).catch( (err)=> {
+                reject(err.message)
+            })
        })
     }
     len(){

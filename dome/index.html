@@ -78,10 +78,10 @@
                 <input type="text" placeholder='您想说的话' v-model="item.con">
                 <span @click="add">添加</span>
                 <!-- <span onclick="search()">搜索</span> -->
-              <!--    <span onclick="del()">删除</span>
-                 <span onclick="delAll()">删除全部</span>
-                <span onclick="searchAll()">搜索全部</span>
-                <span onclick="searchLength()">搜索长度</span> -->
+                 <span @click="del">删除</span>
+                 <!-- <span onclick="delAll()">删除全部</span> -->
+                <!-- <span onclick="searchAll()">搜索全部</span> -->
+                <!-- <span onclick="searchLength()">搜索长度</span> -->
             </div>
             <div class="con" >
                 <ul>
@@ -104,7 +104,7 @@
     <script src="./until.js"></script>
     <script src="https://cdn.bootcss.com/vue/2.5.0/vue.js"></script>
 	<script>
-        var api = new until('n1fUTDjA1h1xHeTCxiYqqtx3MT6hNqcjbZG');
+        var api = new until('n1xfoWpatHj4Fm8v5TNaj4m1T2wRx2n5axd');
         var time = null;
 
 
@@ -138,10 +138,15 @@
             },
             methods: {
                 init(){
-                    api.getAll().then(r=>this.list = r.filter(t=>t.title))
+                    api.get().then(r=>this.list = r.filter(t=>t.title))
                 },
                 add(){
                     api.set(this.item).then(r=>{
+                        this.serialNumber = r;
+                    })
+                },
+                del(){
+                    api.del(this.item).then(r=>{
                         this.serialNumber = r;
                     })
                 },
