@@ -99,10 +99,6 @@ export default [{
         "no": "tdhy"
     },
     {
-        "com": "安信达快递",
-        "no": "axd"
-    },
-    {
         "com": "快捷速递",
         "no": "kuaijie"
     },
@@ -113,10 +109,6 @@ export default [{
     {
         "com": "DHL",
         "no": "dhl"
-    },
-    {
-        "com": "DPEX国际快递",
-        "no": "dpex"
     },
     {
         "com": "D速物流",
@@ -147,10 +139,6 @@ export default [{
         "no": "cs"
     },
     {
-        "com": "城市之星物流",
-        "no": "cszx"
-    },
-    {
         "com": "安捷快递",
         "no": "aj"
     },
@@ -167,16 +155,8 @@ export default [{
         "no": "dsf"
     },
     {
-        "com": "长通物流",
-        "no": "ctwl"
-    },
-    {
         "com": "飞豹快递",
         "no": "feibao"
-    },
-    {
-        "com": "马来西亚（大包EMS）",
-        "no": "malaysiaems"
     },
     {
         "com": "安能快递",
