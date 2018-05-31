@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "element-ui": "^2.3.8",
+    "element-ui": "^2.4.0",
     "nebpay": "0.0.5",
     "nebulas": "^0.4.8",
     "normalize.css": "^8.0.0",

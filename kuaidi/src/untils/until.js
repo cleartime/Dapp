@@ -12,13 +12,16 @@ let nebPay = new NebPay();
 
 class Api {
   constructor(dappAddress) {
-    this.dappAddress = dappAddress;
+    this.dappAddress = 'n1KSbe4BdBSDxBZBp3ruF3H5pn6TWgMA4VV';
+    // n1YnxCTq2PPzTHH2d2MXTqBoLcg1Uj4851P
+    // n1Fxu7qxPhXVsGgtKLtHgHfp7cgsfjyAyNH
+    // n1Xrz4P8RScKffEL8sjRd9QPDPjfCPtWvbX
   }
   login(obj) {
     let to = this.dappAddress;
     let value = "0";
-    let callFunction = "set";
-    var callArgs = JSON.stringify([obj]);
+    let callFunction = "set_users";
+    var callArgs = JSON.stringify([to]);
     // let callArgs = "[" + JSON.stringify(obj) + "]"
     // var callArgs = "[\"" + JSON.stringify(str) + "\"]"
     let cbPush = this.res;
@@ -30,7 +33,7 @@ class Api {
     let to = this.dappAddress;
     let value = "0";
     let callFunction = "set";
-    var callArgs = JSON.stringify([obj]);
+    var callArgs = JSON.stringify([to, obj]);
     // let callArgs = "[" + JSON.stringify(obj) + "]"
     // var callArgs = "[\"" + JSON.stringify(str) + "\"]"
     let cbPush = this.res;
@@ -44,7 +47,7 @@ class Api {
     var gas_price = "1000000"
     var gas_limit = "2000000"
     var callFunction = "get";
-    var callArgs = "[]"; //in the form of ["args"]
+    var callArgs = JSON.stringify([value]);
     var contract = {
       "function": callFunction,
       "args": callArgs

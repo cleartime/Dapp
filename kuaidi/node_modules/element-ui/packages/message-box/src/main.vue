@@ -161,20 +161,10 @@
         this.onClose && this.onClose();
         messageBox.closeDialog(); // 解绑
         if (this.lockScroll) {
-          setTimeout(() => {
-            if (this.modal && this.bodyOverflow !== 'hidden') {
-              document.body.style.overflow = this.bodyOverflow;
-              document.body.style.paddingRight = this.bodyPaddingRight;
-            }
-            this.bodyOverflow = null;
-            this.bodyPaddingRight = null;
-          }, 200);
+          setTimeout(this.restoreBodyStyle, 200);
         }
         this.opened = false;
-
-        if (!this.transition) {
-          this.doAfterClose();
-        }
+        this.doAfterClose();
         setTimeout(() => {
           if (this.action) this.callback(this.action, this);
         });
@@ -283,9 +273,11 @@
     },
 
     mounted() {
-      if (this.closeOnHashChange) {
-        window.addEventListener('hashchange', this.close);
-      }
+      this.$nextTick(() => {
+        if (this.closeOnHashChange) {
+          window.addEventListener('hashchange', this.close);
+        }
+      });
     },
 
     beforeDestroy() {

@@ -17,11 +17,36 @@ SampleContract.prototype = {
         // 存储对象
         LocalContractStorage.set("obj", {name:name,value:value});
     },
+<<<<<<< HEAD
     getname: function(name){
         return LocalContractStorage.set(name);
     },
     getvalue: function(){
         return LocalContractStorage.get("value");
+=======
+    set(data){
+        var index = this.size;
+        this.arrayMap.set(index, data);
+        this.size +=1;
+        return data;
+    },
+    updata(index, data){
+        this.arrayMap.set(new BigNumber(index), data);
+    },
+    get(star, end){
+        if(!end){
+            return this.getOne(star);
+        }
+        var result =[];
+        var number = end-star;
+          if(number > this.size){
+            end = this.size;
+          }
+          for(var i=star;i<end;i++){
+            result.push(this.arrayMap.get(i))
+          }
+          return result
+>>>>>>> 77a4a32c341ac3ffad7df273b262777ee380ef90
     },
     get: function (name) {
       var obj = this.category.get(name)

@@ -32,8 +32,14 @@ class until {
         let end = 'abcd';
         let to = this.dappAddress;
         let value = "0";
+<<<<<<< HEAD
         let callFunction = "set"
         let callArgs = "[\"" + start + "\",\"" + end + "\"]"
+=======
+        let callFunction = "set";
+        obj.switch = '1';
+        var callArgs = JSON.stringify([obj]);
+>>>>>>> 77a4a32c341ac3ffad7df273b262777ee380ef90
         // let callArgs = "[" + JSON.stringify(obj) + "]"
         // var callArgs = "[\"" + JSON.stringify(str) + "\"]"
         let cbPush = this.res;
@@ -41,14 +47,37 @@ class until {
             listener: cbPush //设置listener, 处理交易返回信息
         }));
     }
-     get(index){
+    updata(obj, key){
+         this.isOnly(obj, key).then(index=>{
+            if(!index){
+                alert('不能修改')
+                return
+            }
+            let to = this.dappAddress;
+            let value = "0";
+            obj.switch = '1';
+            let callFunction = "updata"
+            var callArgs = JSON.stringify([index, obj]);
+            // let callArgs = "[" + JSON.stringify(obj) + "]"
+            // var callArgs = "[\"" + JSON.stringify(str) + "\"]"
+            let cbPush = this.res;
+            return Promise.resolve(nebPay.call(to, value, callFunction, callArgs, { //使用nebpay的call接口去调用合约,
+                listener: cbPush //设置listener, 处理交易返回信息
+            }));
+        })
+    }
+    get(obj){
 	 	var value = "0";
         var nonce = "0"
         var start = 'abc';
         var gas_price = "1000000"
         var gas_limit = "2000000"
         var callFunction = "get";
+<<<<<<< HEAD
         var callArgs = "[\"" + start + "\"]"; //in the form of ["args"]
+=======
+        var callArgs = JSON.stringify([obj.title]);
+>>>>>>> 77a4a32c341ac3ffad7df273b262777ee380ef90
         var contract = {
             "function": callFunction,
             "args": callArgs
@@ -62,6 +91,7 @@ class until {
 	        })
        })
     }
+<<<<<<< HEAD
     del(index){
         var value = "0";
         var nonce = "0"
@@ -82,6 +112,26 @@ class until {
                 reject(err.message)
             })
        })
+=======
+    del(obj, key){
+        this.isOnly(obj, key).then(r=>{
+            if(!r){
+                alert('不能删除')
+                return
+            }
+            let to = this.dappAddress;
+            let value = "0";
+            let callFunction = "set";
+            obj.switch = '0';
+            var callArgs = JSON.stringify([obj]);
+            // let callArgs = "[" + JSON.stringify(obj) + "]"
+            // var callArgs = "[\"" + JSON.stringify(str) + "\"]"
+            let cbPush = this.res;
+            return Promise.resolve(nebPay.call(to, value, callFunction, callArgs, { //使用nebpay的call接口去调用合约,
+                listener: cbPush //设置listener, 处理交易返回信息
+            }));
+        })
+>>>>>>> 77a4a32c341ac3ffad7df273b262777ee380ef90
     }
     len(){
     	var value = "0";
@@ -103,7 +153,27 @@ class until {
 			        })
        })
     }
-    getAll(){
+    isOnly(obj, key){
+        let i=0,index=-1;
+        return new Promise((resole,reject)=>{
+            this.getAll(1).then(r=>{
+                let len=r.length;
+                for(;i<len;i++){
+                    if(obj[key] === r[i][key]){
+                        index = i;
+                        break
+                    }
+                }
+                if(index===-1){
+                    reject()
+                }else{
+                    resole(index)
+                }
+           })
+        })
+
+    }
+    getAll(type){
 	 	var value = "0";
         var nonce = "0"
         var gas_price = "1000000"
@@ -118,9 +188,22 @@ class until {
        return new Promise((resole,reject)=>{
 			neb.api.call(from, this.dappAddress, value, nonce, gas_price, gas_limit, contract).then( (resp) =>{
 						let res = JSON.parse(resp.result);
+                        let arr = [];
 						console.log('返回全部结果如下：')
-						console.log(res)
-			            resole(res)
+                        if(type) {
+                            console.log(res)
+                            resole(res)
+                            return
+                        }
+                        for(let i=0,len=res.length;i<len;i++){
+                            let t = res[i];
+                            if(t.switch && !!Number(t.switch)){
+                                delete t.switch
+                                arr.push(t)
+                            }
+                        }
+                        console.log(arr)
+			            resole(arr)
 			        }).catch( (err)=> {
 			            reject(err.message)
 			        })

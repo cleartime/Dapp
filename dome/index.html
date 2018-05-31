@@ -77,9 +77,15 @@
                 <input type="text" placeholder="您的昵称" v-model="item.title">
                 <input type="text" placeholder='您想说的话' v-model="item.con">
                 <span @click="add">添加</span>
+<<<<<<< HEAD
                 <!-- <span onclick="search()">搜索</span> -->
                  <span @click="del">删除</span>
                  <!-- <span onclick="delAll()">删除全部</span> -->
+=======
+                <span @click="query()">查找</span>
+                 <span @click="updata()">更新</span>
+                 <span @click="del()">删除</span>
+>>>>>>> 77a4a32c341ac3ffad7df273b262777ee380ef90
                 <!-- <span onclick="searchAll()">搜索全部</span> -->
                 <!-- <span onclick="searchLength()">搜索长度</span> -->
             </div>
@@ -104,7 +110,11 @@
     <script src="./until.js"></script>
     <script src="https://cdn.bootcss.com/vue/2.5.0/vue.js"></script>
 	<script>
+<<<<<<< HEAD
         var api = new until('n1xfoWpatHj4Fm8v5TNaj4m1T2wRx2n5axd');
+=======
+        var api = new until('n1hJ4b5XRnnSJrF2fqHqdKLhu2qkmr2qy8L');
+>>>>>>> 77a4a32c341ac3ffad7df273b262777ee380ef90
         var time = null;
 
 
@@ -138,11 +148,17 @@
             },
             methods: {
                 init(){
+<<<<<<< HEAD
                     api.get().then(r=>this.list = r.filter(t=>t.title))
+=======
+                    api.getAll(this.item).then(r=>{
+                        // console.log(r)
+                    })
+>>>>>>> 77a4a32c341ac3ffad7df273b262777ee380ef90
                 },
                 add(){
                     api.set(this.item).then(r=>{
-                        this.serialNumber = r;
+                        console.log(r)
                     })
                 },
                 del(){
@@ -151,14 +167,16 @@
                     })
                 },
                 query(){
-                    this.loading = true;
-                    api.query(this.serialNumber).then(r=>{
-                        if (!r.code) {
-                           
-                            this.list.push(this.item)
-                            clearInterval(time);
-                            time = null;
-                        }
+                    api.get(this.item).then(r=>{
+                        console.log(r)
+                    })
+                },
+                updata(){
+                    api.updata(this.item, 'title').then(r=>{})
+                },
+                del(){
+                    api.del(this.item, 'title').then(r=>{
+                        console.log(r)
                     })
                 }
             },
