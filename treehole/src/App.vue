@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div id="app">
     <div class="nav">
       <div class="nav-con">
@@ -81,7 +81,9 @@
   import {
     upload
   } from './untils/index'
-  let api = new Api('n1y8KVcJvngDNGtnHQPe5J8W3iHhkNJiTHc');
+  
+  let api = new Api('n1pwAwpoZHSuRoAwpB7ytUJdRLDdnRz1SzJ');
+  // let api = new Api('n1y8KVcJvngDNGtnHQPe5J8W3iHhkNJiTHc');
   let time = null;
   export default {
     name: 'App',

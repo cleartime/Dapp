@@ -77,11 +77,11 @@
                 <input type="text" placeholder="您的昵称" v-model="item.title">
                 <input type="text" placeholder='您想说的话' v-model="item.con">
                 <span @click="add">添加</span>
-                <!-- <span onclick="search()">搜索</span> -->
-              <!--    <span onclick="del()">删除</span>
-                 <span onclick="delAll()">删除全部</span>
-                <span onclick="searchAll()">搜索全部</span>
-                <span onclick="searchLength()">搜索长度</span> -->
+                <span @click="query()">查找</span>
+                 <span @click="updata()">更新</span>
+                 <span @click="del()">删除</span>
+                <!-- <span onclick="searchAll()">搜索全部</span> -->
+                <!-- <span onclick="searchLength()">搜索长度</span> -->
             </div>
             <div class="con" >
                 <ul>
@@ -104,7 +104,7 @@
     <script src="./until.js"></script>
     <script src="https://cdn.bootcss.com/vue/2.5.0/vue.js"></script>
 	<script>
-        var api = new until('n1fUTDjA1h1xHeTCxiYqqtx3MT6hNqcjbZG');
+        var api = new until('n1hJ4b5XRnnSJrF2fqHqdKLhu2qkmr2qy8L');
         var time = null;
 
 
@@ -138,22 +138,26 @@
             },
             methods: {
                 init(){
-                    api.getAll().then(r=>this.list = r.filter(t=>t.title))
+                    api.getAll(this.item).then(r=>{
+                        // console.log(r)
+                    })
                 },
                 add(){
                     api.set(this.item).then(r=>{
-                        this.serialNumber = r;
+                        console.log(r)
                     })
                 },
                 query(){
-                    this.loading = true;
-                    api.query(this.serialNumber).then(r=>{
-                        if (!r.code) {
-                           
-                            this.list.push(this.item)
-                            clearInterval(time);
-                            time = null;
-                        }
+                    api.get(this.item).then(r=>{
+                        console.log(r)
+                    })
+                },
+                updata(){
+                    api.updata(this.item, 'title').then(r=>{})
+                },
+                del(){
+                    api.del(this.item, 'title').then(r=>{
+                        console.log(r)
                     })
                 }
             },

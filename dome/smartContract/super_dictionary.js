@@ -10,10 +10,14 @@ SampleContract.prototype = {
     init() {
         this.size = 0;
     },
-    set(option){
+    set(data){
         var index = this.size;
-        this.arrayMap.set(index, option);
+        this.arrayMap.set(index, data);
         this.size +=1;
+        return data;
+    },
+    updata(index, data){
+        this.arrayMap.set(new BigNumber(index), data);
     },
     get(star, end){
         if(!end){
@@ -21,10 +25,10 @@ SampleContract.prototype = {
         }
         var result =[];
         var number = end-star;
-        if(number > this.size){
-          end = this.size;
-        }
-          for(var i=0;i<end;i++){
+          if(number > this.size){
+            end = this.size;
+          }
+          for(var i=star;i<end;i++){
             result.push(this.arrayMap.get(i))
           }
           return result
