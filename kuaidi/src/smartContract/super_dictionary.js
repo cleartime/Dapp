@@ -17,7 +17,7 @@ SampleContract.prototype = {
         return this.user.get(this.from)
     },
     getblock() {
-        return this.from
+        return JSON.stringify(Blockchain.transaction)
     },
 };
 

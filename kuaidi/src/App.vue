@@ -46,7 +46,7 @@ import Api from "./untils/until";
 import company from "./untils/company";
 import { setTimeout } from "timers";
 let time = null;
-let api = new Api("n1ucvbnSeFx1qMkPLc73wPU3FNN2aZmoEEX");
+let api = new Api("n1v1xiq9otpxeQgPY4Rn4XSe8JBYNygbD4g");
 let kuaidi_api = "http://v.juhe.cn/exp/index";
 export default {
   name: "App",
