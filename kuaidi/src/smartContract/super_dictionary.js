@@ -1,14 +1,21 @@
 "use strict";
 
-var SampleContract = function () {
+var GxxContract = function () {
     LocalContractStorage.defineMapProperty(this, "user");
+    LocalContractStorage.defineMapProperty(this, "auther");
 };
 
 
-SampleContract.prototype = {
+GxxContract.prototype = {
     init() {
-        this.to = Blockchain.transaction.to;
+        // this.to = Blockchain.transaction.to;
         this.from = Blockchain.transaction.from;
+    },
+    users(data) {
+        this.auther.set('auther', 'this.from')
+    },
+    del() {
+        this.user.set(this.from)
     },
     set(data) {
         this.user.set(this.from, data)
@@ -16,9 +23,9 @@ SampleContract.prototype = {
     get() {
         return this.user.get(this.from)
     },
-    getblock() {
-        return JSON.stringify(Blockchain.transaction)
+    getusers() {
+        return this.auther.get('auther')
     },
 };
 
-module.exports = SampleContract;
+module.exports = GxxContract;

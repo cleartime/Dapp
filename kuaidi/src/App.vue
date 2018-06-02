@@ -2,9 +2,30 @@
   <div id="app">
     <div class="nav">
       <a href="/"><img src="./assets/logo.png" alt="" class="logo" height="80"></a>
+      <ul class="menu">
+        <li @click='rule=!rule'>
+          使用教程
+        </li>
+        <li>
+          <a href="https://blog.nebulas.io/2018/05/04/how-to-build-a-dapp-on-nebulas-part-1/" target="_blank">帮助教程</a>
+        </li>
+        <li>
+          <el-tooltip effect="dark" content="1047105447@qq.com" placement="top-start">
+            <el-button>联系方式</el-button>
+          </el-tooltip>
+        </li>
+      </ul>
       <div class="right">
         <span @click='login' v-if="!from" class="login">快捷登录入口</span>
-        <p class="mine" @click='record' v-else><span v-if='list.length'>查看我的快递记录</span><span>{{from}}</span></p>
+        <p class="mine" v-else>
+          <el-dropdown @command="command_fn">
+            <span class="el-dropdown-link">个人中心<i class="el-icon-arrow-down el-icon--right"></i></span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="a">快递记录</el-dropdown-item>
+              <el-dropdown-item command="b">{{from}}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </p>
       </div>
     </div>
     <div class="bg">
@@ -25,17 +46,46 @@
         </div>
       </div>
     </div>
+    <div class="foot">
+      <p class="caret" contenteditable>星云链查快递提供精准实用的快递网点查询、快递网点电话查询、快递派送范围查询等</p>
+      <p class="tip">星云链查快递@2018 | 使用 <a href="https://nebulas.io/cn/" target="_blank">星云链 驱动</a> | <a href="https://incentive.nebulas.io/cn/signup.html?invite=bFZxb" target="_blank">提交DAPP获得 100NAS 币</a></p>
+    </div>
     <el-dialog title="我的快递" :visible.sync="con_visible" width="30%" center>
-      <ul>
+      <ul class="con_visible">
         <li v-for='i in list'>
           <span class="time">{{i.datetime}}</span>
           <span class="remark">{{i.remark}}</span>
         </li>
       </ul>
       <span slot="footer" class="dialog-footer">
-          <el-button @click="con_visible = false">取 消</el-button>
-          <el-button type="primary" @click="con_visible = false">确 定</el-button>
-        </span>
+                  <el-button @click="con_visible = false">取 消</el-button>
+                  <el-button type="primary" @click="con_visible = false">确 定</el-button>
+                </span>
+    </el-dialog>
+    <el-dialog title="使用教程" :visible.sync="rule" width="30%" center>
+      <ul class="rule">
+        <li>
+          <span>第一步：</span>
+          <p style="line-height: 25px">快捷登录<br>看到右上角一闪一闪的按钮了么= =<br>(如已登入则跳过)</p>
+        </li>
+        <li>
+          <span>第二步：</span>
+          <p>点击<img src="./assets/company.png" alt="" height="50">选择快递公司</p>
+        </li>
+        <li>
+          <span>第三步：</span>
+          <p>输入快递单号</p>
+        </li>
+        <li>
+          <span style="margin-left:-1em">最后一步：</span>
+          <p>点击<img src="./assets/search.png" alt="" height="50">完成搜索</p>
+        </li>
+      </ul>
+  
+      <span slot="footer" class="dialog-footer">
+                  <el-button @click="rule = false">取 消</el-button>
+                  <el-button type="primary" @click="rule = false">确 定</el-button>
+                </span>
     </el-dialog>
   </div>
 </template>
@@ -46,7 +96,8 @@ import Api from "./untils/until";
 import company from "./untils/company";
 import { setTimeout } from "timers";
 let time = null;
-let api = new Api("n1v1xiq9otpxeQgPY4Rn4XSe8JBYNygbD4g");
+// b4061a7fada67e53c2086ca306b608eb334cec95d2d828049551ab18b5178e76
+let api = new Api("n1mbFqEZr5aEtya2BQhiUdVDmfMFAkgsFsP");
 let kuaidi_api = "http://v.juhe.cn/exp/index";
 export default {
   name: "App",
@@ -54,6 +105,7 @@ export default {
     // 3362937148645
     // sto
     return {
+      rule: false,
       con_visible: false,
       com_choose: false,
       com_act: false,
@@ -71,14 +123,22 @@ export default {
       }
     };
   },
-  created() {
-    // this.record();
-  },
+  created() {},
   mounted() {
-    this.getout();
+    if (!this.getout()) return;
+    this.record();
+    this.getall();
+    // axios
+    //   .post("https://Mainnet.nebulas.io/v1/user/getTransactionReceipt", {
+    //     hash: "da0f2d5735e52098df40f4e5a6f3d496a79991c229c28e89dd9acccc41d9abc7"
+    //   })
+    //   .then(d => {
+    //     log(d);
+    //   });
   },
   methods: {
     login() {
+      if (!this.getout()) return;
       api.login().then(r => {
         time = setInterval(() => {
           if (!time) {
@@ -112,6 +172,20 @@ export default {
         }
       });
     },
+    set_query(r) {
+      api.query(r).then(r => {
+        if (!r.code) {
+          time = null;
+          this.$notify({
+            title: `查询成功`,
+            message: "快递信息已经出现拉!",
+            type: "success"
+          });
+          this.list = data.reverse();
+          this.con_visible = true;
+        }
+      });
+    },
     record() {
       api.get().then(r => {
         if (r == "null") {
@@ -120,13 +194,27 @@ export default {
         this.list = r || [];
       });
     },
+    getall() {
+      api.getuser().then(r => {
+        if (r == "null") {
+          r = [];
+        }
+        this.list = r || [];
+      });
+    },
     set(data) {
       api.set(data).then(r => {
-        this.list = data.reverse();
-        this.con_visible = true;
+        time = setInterval(() => {
+          if (!time) {
+            clearInterval(time);
+          } else {
+            this.set_query(r);
+          }
+        }, 3000);
       });
     },
     query() {
+      if (!this.getout()) return;
       if (!this.from) {
         this.$message({
           message: "请先登录",
@@ -195,6 +283,11 @@ export default {
       }
       return true;
     },
+    command_fn(e) {
+      if (e == "a") {
+        this.con_visible = true;
+      }
+    },
     init(obj) {},
     reset() {}
   }
@@ -207,6 +300,22 @@ $color: #607778;
   color: $color;
   font-size: 16px;
   .nav {
+    .menu {
+      margin-right: 10px;
+      flex: 1;
+      justify-content: flex-end;
+      display: flex;
+      li {
+        a {
+          text-decoration: none;
+          color: $color;
+        }
+        margin: 0 10px;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+    }
     width: 1400px;
     margin: 0 auto;
     padding: 20px 0;
@@ -326,6 +435,43 @@ $color: #607778;
   }
 }
 
+.foot {
+  width: 1400px;
+  margin: 0 auto;
+  .sm {
+    line-height: 25px;
+  }
+  .menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    li {
+      margin: 10px 20px;
+    }
+  }
+  .tip {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 50px;
+    a {
+      color: $color;
+    }
+  }
+  .caret {
+    padding-right: 4px;
+    box-sizing: border-box;
+    font: bold 200% Consolas, Monaco, monospace;
+    border-right: 0.1em solid;
+    width: 1230px !important;
+    /* # of chars */
+    margin: 2.5em auto;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typing 3s steps(45, end), blink-caret 0.5s infinite alternate;
+  }
+}
+
 .el-dialog {
   border-radius: 10px;
   width: 800px !important;
@@ -335,15 +481,55 @@ $color: #607778;
     background-color: $color !important;
     border-color: $color !important;
   }
-  li {
-    line-height: 30px;
-    display: flex;
-    .time {
-      width: 160px;
+  .con_visible {
+    li {
+      line-height: 30px;
+      display: flex;
+      .time {
+        width: 160px;
+      }
+      .remark {
+        flex: 1;
+      }
     }
-    .remark {
-      flex: 1;
+  }
+  .rule {
+    font-weight: bold;
+    font-size: 18px;
+    padding-left: 31%;
+    li {
+      span {
+        padding-right: 50px;
+      }
+      p {
+        display: flex;
+        align-items: center;
+        img {
+          padding: 0 20px;
+        }
+      }
+      line-height: 80px;
+      line-height: 80px;
+      display: flex;
     }
+  }
+  .rulep {
+    margin-bottom: -10px;
+    text-align: center;
+  }
+}
+
+.el-tooltip {
+  padding: 0 10px;
+  font-size: 20px;
+  font-weight: bold;
+  border: none !important;
+}
+.el-dropdown {
+  span {
+    color: $color;
+    font-weight: bold;
+    font-size: 20px !important;
   }
 }
 /**从上往下**/
@@ -411,6 +597,28 @@ $color: #607778;
   }
   from {
     opacity: 1;
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes blink-caret {
+  50% {
+    border-right: none;
+    border-color: none;
+  }
+}
+@media screen and (max-width: 1280px) {
+  body {
+    transform: scale(0.8) translateY(-120px);
+    .bg {
+      width: 1660px !important;
+      transform: translateX(-160px);
+    }
   }
 }
 </style>
