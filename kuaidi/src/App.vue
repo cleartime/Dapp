@@ -398,7 +398,6 @@ $color: #607778;
           color: $color;
           background: #fff;
           &::-webkit-input-placeholder {
-            font-size: 16px;
             color: #ccc;
           }
           &.act {
