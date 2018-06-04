@@ -116,8 +116,10 @@ export default {
       list: [],
       from: "",
       item: {
-        no: "3362937148645",
-        com: "sto",
+        // 3362937148645
+        no: "",
+        // sto
+        com: "",
         dtype: "",
         key: "e9ac621879183be591b4747bb4ae76ed"
       }
