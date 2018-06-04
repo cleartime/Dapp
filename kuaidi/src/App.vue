@@ -41,7 +41,7 @@
         <div class="bot">
           <img :src="require(`@/assets/icon/${comicon}.png`)" alt="" height="56" class="company" v-if='comicon' @click='showkd=!showkd' :class="com_choose?'choose':''">
           <img src="./assets/company.png" alt="" class="company" v-if='!comicon' @click='showkd=!showkd' :class="com_act?'act':''">
-          <input ref="input" type="number" v-model="item.no" placeholder="快递单号" :class="input_act?'act':''">
+          <input ref="input" type="number" v-model="item.no" placeholder="请填写快递单号" :class="input_act?'act':''">
           <img @click='query' src="./assets/search.png" alt="" height="40" class="search">
         </div>
       </div>
