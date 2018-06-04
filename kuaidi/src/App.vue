@@ -98,7 +98,8 @@ import { setTimeout } from "timers";
 let time = null;
 // b4061a7fada67e53c2086ca306b608eb334cec95d2d828049551ab18b5178e76
 let api = new Api("n1mbFqEZr5aEtya2BQhiUdVDmfMFAkgsFsP");
-let kuaidi_api = "http://v.juhe.cn/exp/index";
+// let kuaidi_api = "http://v.juhe.cn/exp/index";
+let kuaidi_api = `${location.orign}/exp/index`;
 export default {
   name: "App",
   data() {
@@ -258,6 +259,13 @@ export default {
         })
         .then(res => {
           let data = res.data.result;
+          if (!data) {
+            this.$message({
+              message: res.data.reason,
+              type: "warning"
+            });
+            return;
+          }
           this.set(data.list);
         })
         .catch(function(error) {
