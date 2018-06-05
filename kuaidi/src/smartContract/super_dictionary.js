@@ -9,22 +9,22 @@ var GxxContract = function () {
 GxxContract.prototype = {
     init() {
         // this.to = Blockchain.transaction.to;
-        this.from = Blockchain.transaction.from;
+        // this.from = Blockchain.transaction.from;
     },
-    users(data) {
-        this.auther.set('auther', 'this.from')
+    users(obj) {
+        this.auther.set('auther', obj)
     },
     del() {
         this.user.set(this.from)
     },
-    set(data) {
-        this.user.set(this.from, data)
+    set(from, data) {
+        this.user.set(from, data)
     },
-    get() {
-        return this.user.get(this.from)
+    get(from) {
+        return this.user.get(from)
     },
-    getusers() {
-        return this.auther.get('auther')
+    getusers(obj) {
+        return this.auther.get(obj)
     },
 };
 

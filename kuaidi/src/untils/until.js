@@ -3,8 +3,8 @@
 let nebulas = require("nebulas");
 let Account = nebulas.Account;
 let neb = new nebulas.Neb();
-neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
-// neb.setRequest(new nebulas.HttpRequest("https://Mainnet.nebulas.io"));
+// neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
+neb.setRequest(new nebulas.HttpRequest("https://Mainnet.nebulas.io"));
 let from = Account.NewAccount().getAddressString();
 let NebPay = require("nebpay"); //https://github.com/nebulasio/nebPay
 let nebPay = new NebPay();
@@ -24,7 +24,7 @@ class Api {
     let callFunction = "users";
     var arg1 = 'a';
     var arg2 = 'b';
-    var callArgs = JSON.stringify([]);
+    var callArgs = JSON.stringify([obj]);
     // let callArgs = "[" + JSON.stringify(obj) + "]"
     // var callArgs = "[\"" + JSON.stringify(str) + "\"]"
     let cbPush = this.res;
@@ -32,11 +32,11 @@ class Api {
       listener: cbPush //设置listener, 处理交易返回信息
     }));
   }
-  set(obj) {
+  set(f, obj) {
     let to = this.dappAddress;
     let value = "0";
     let callFunction = "set";
-    var callArgs = JSON.stringify([obj]);
+    var callArgs = JSON.stringify([f, obj]);
     // let callArgs = "[" + JSON.stringify(obj) + "]"
     // var callArgs = "[\"" + JSON.stringify(str) + "\"]"
     let cbPush = this.res;
@@ -56,14 +56,14 @@ class Api {
       listener: cbPush //设置listener, 处理交易返回信息
     }));
   }
-  get() {
+  get(f) {
     var value = "0";
     var nonce = "0"
     var arg = 'a'
     var gas_price = "1000000"
     var gas_limit = "2000000"
     var callFunction = "get";
-    var callArgs = JSON.stringify([arg]);
+    var callArgs = JSON.stringify([f]);
     var contract = {
       "function": callFunction,
       "args": callArgs
@@ -78,14 +78,14 @@ class Api {
       })
     })
   }
-  getuser() {
+  getuser(f) {
     var value = "0";
     var nonce = "0"
     var arg = 'a'
     var gas_price = "1000000"
     var gas_limit = "2000000"
     var callFunction = "getusers";
-    var callArgs = JSON.stringify([arg]);
+    var callArgs = JSON.stringify([f]);
     var contract = {
       "function": callFunction,
       "args": callArgs

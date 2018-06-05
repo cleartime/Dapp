@@ -1,13 +1,13 @@
 <template>
-  <div id="app">
+  <div id="app" v-loading="loading">
     <div class="nav">
       <a href="/"><img src="./assets/logo.png" alt="" class="logo" height="80"></a>
       <ul class="menu">
         <li @click='rule=!rule'>
           使用教程
         </li>
-        <li>
-          <a href="https://blog.nebulas.io/2018/05/04/how-to-build-a-dapp-on-nebulas-part-1/" target="_blank">帮助教程</a>
+        <li @click='help=!help'>
+          帮助教程
         </li>
         <li>
           <el-tooltip effect="dark" content="1047105447@qq.com" placement="top-start">
@@ -58,34 +58,65 @@
         </li>
       </ul>
       <span slot="footer" class="dialog-footer">
-                  <el-button @click="con_visible = false">取 消</el-button>
-                  <el-button type="primary" @click="con_visible = false">确 定</el-button>
-                </span>
+                              <el-button @click="con_visible = false">取 消</el-button>
+                              <el-button type="primary" @click="con_visible = false">确 定</el-button>
+                            </span>
     </el-dialog>
+  
     <el-dialog title="使用教程" :visible.sync="rule" width="30%" center>
-      <ul class="rule">
-        <li>
-          <span>第一步：</span>
-          <p style="line-height: 25px">快捷登录<br>看到右上角一闪一闪的按钮了么= =<br>(如已登入则跳过)</p>
-        </li>
-        <li>
-          <span>第二步：</span>
-          <p>点击<img src="./assets/company.png" alt="" height="50">选择快递公司</p>
-        </li>
-        <li>
-          <span>第三步：</span>
-          <p>输入快递单号</p>
-        </li>
-        <li>
-          <span style="margin-left:-1em">最后一步：</span>
-          <p>点击<img src="./assets/search.png" alt="" height="50">完成搜索</p>
-        </li>
-      </ul>
+      <el-steps :active="active" finish-status="success">
+        <el-step title="第一步">2</el-step>
+        <el-step title="第二步">3</el-step>
+        <el-step title="完成">4</el-step>
+      </el-steps>
+      <!-- <ul class="rule">
+          <li>
+            <span>第一步：</span>
+            <p style="line-height: 25px">快捷登录<br>看到右上角一闪一闪的按钮了么= =<br>(如已登入则跳过)</p>
+          </li>
+          <li>
+            <span>第二步：</span>
+            <p>点击<img src="./assets/company.png" alt="" height="50">选择快递公司</p>
+          </li>
+          <li>
+            <span>第三步：</span>
+            <p>输入快递单号</p>
+          </li>
+          <li>
+            <span style="margin-left:-1em">最后一步：</span>
+            <p>点击<img src="./assets/search.png" alt="" height="50">完成搜索</p>
+          </li> -->
+      <!-- </ul> -->
+      <div class="rule-con">
+        <p v-if="active==0">准备好了么，请点击第一步</p>
+        <p v-else-if="active==1">点击<img src="./assets/company.png" alt="" height="50">选择快递公司</p>
+        <p v-else-if="active==2">输入快递单号</p>
+        <p v-else>点击<img src="./assets/search.png" alt="" height="50">完成搜索</p>
+      </div>
   
       <span slot="footer" class="dialog-footer">
-                  <el-button @click="rule = false">取 消</el-button>
-                  <el-button type="primary" @click="rule = false">确 定</el-button>
-                </span>
+                              <el-button @click="rule = false">取 消</el-button>
+                              <el-button type="primary" @click="next">{{this.active==0?'第一步':this.active==1?'第二步':this.active==2?'最后一步':'我学会了'}}</el-button>
+                            </span>
+    </el-dialog>
+    <el-dialog title="帮助教程" :visible.sync="help" width="30%" center>
+      <el-steps direction="vertical">
+        <el-step title="下载安装chrome星云钱包插件。" description="1.WebExtensionWallet 类似以太坊的MetaMask。
+        2.点WebExtensionWallet链接，进入项目主页，下载zip压缩包。然后解压。
+        3.chrome浏览器地址栏输入 chrome://extensions/ 进入到浏览器扩展程序管理页面。
+        4.打开右上角开发者模式开关。
+        5.点击 加载已解压到扩展程序 ，然后选择第2步下载解压的文件夹。"></el-step>
+        <el-step title="安装完钱包插件后, 需要创建钱包" description="1.创建钱包。 保存好你创建的钱包和密钥库文件(私钥)。
+        2.解锁创建的钱包。获取你的钱包地址(公钥)
+        3.获取测试币.  https://testnet.nebulas.io/claim/ 申请后到账需要一两分钟。（主网上线后，需要购买真实NAS币。大概0.01NAS即可参与。）"></el-step>
+        <el-step title="钱包插件选择" description="钱包插件选择测试网和中文界面。（主网上线后，需要选择Mainnet）"></el-step>
+        <el-step title="最后" description="安装好插件和创建钱包后。回到《星云链查快递》查快递 = = "></el-step>
+      </el-steps>
+  
+      <span slot="footer" class="dialog-footer">
+                              <el-button @click="help = false">取 消</el-button>
+                              <el-button type="primary" @click="help = false">我知道了</el-button>
+                            </span>
     </el-dialog>
   </div>
 </template>
@@ -96,16 +127,22 @@ import Api from "./untils/until";
 import company from "./untils/company";
 import { setTimeout } from "timers";
 let time = null;
-// b4061a7fada67e53c2086ca306b608eb334cec95d2d828049551ab18b5178e76
-let api = new Api("n1mbFqEZr5aEtya2BQhiUdVDmfMFAkgsFsP");
-// let kuaidi_api = "http://v.juhe.cn/exp/index";
-let kuaidi_api = `${location.orign}/exp/index`;
+// ec241dbe0d93ef61582d3c10ac36f660cf16e8ca6b5998253955d5fede3a5cf5
+// let api = new Api("n1k1WqwF6AKw4AoLvL9NWxwZUhiEBDBCvFi"); //text
+let api = new Api("n1gqhmKjDqsFJ4D5kwjhxnqkqt4kcdMha9k"); //pro
+let kuaidi_api = "http://v.juhe.cn/exp/index";
+// if (!process.env.NODE_ENV === "production") {
+// kuaidi_api = `${location.origin}/exp/index`;
+// }
 export default {
   name: "App",
   data() {
     // 3362937148645
     // sto
     return {
+      active: 0,
+      help: false,
+      loading: false,
       rule: false,
       con_visible: false,
       com_choose: false,
@@ -126,11 +163,27 @@ export default {
       }
     };
   },
-  created() {},
+  created() {
+    this.init();
+    if (!process.env.NODE_ENV !== "production") {
+      this.item.no = "3362937148645";
+      this.item.com = "sto";
+    }
+  },
   mounted() {
+    window.addEventListener("message", e => {
+      log(e);
+      if (e.data && e.data.resp === "Error: Transaction rejected by user") {
+        this.loading && (this.loading = false);
+        clearInterval(time);
+        this.$notify({
+          title: `提示`,
+          message: "您取消了本次交易!",
+          type: "warning"
+        });
+      }
+    });
     if (!this.getout()) return;
-    this.record();
-    this.getall();
     // axios
     //   .post("https://Mainnet.nebulas.io/v1/user/getTransactionReceipt", {
     //     hash: "da0f2d5735e52098df40f4e5a6f3d496a79991c229c28e89dd9acccc41d9abc7"
@@ -140,17 +193,42 @@ export default {
     //   });
   },
   methods: {
+    init() {
+      window.postMessage(
+        {
+          target: "contentscript",
+          data: {},
+          method: "getAccount"
+        },
+        "*"
+      );
+      window.addEventListener("message", e => {
+        if (e.data && e.data.data) {
+          if (e.data.data.account) {
+            this.from = e.data.data.account;
+            this.record();
+            // this.getall();
+          }
+        }
+      });
+    },
+    next() {
+      if (this.active++ > 2) (this.active = 0), (this.rule = false);
+    },
     login() {
       if (!this.getout()) return;
-      api.login().then(r => {
-        time = setInterval(() => {
-          if (!time) {
-            clearInterval(time);
-          } else {
-            this.login_query(r);
-          }
-        }, 3000);
-      });
+      !this.loading && (this.loading = true);
+      this.from &&
+        api.login(this.from).then(r => {
+          this.loading && (this.loading = false);
+          time = setInterval(() => {
+            if (!time) {
+              clearInterval(time);
+            } else {
+              this.login_query(r);
+            }
+          }, 3000);
+        });
     },
     choose(obj) {
       this.item.com = obj.no;
@@ -162,8 +240,10 @@ export default {
       }, 300);
     },
     login_query(r) {
+      !this.loading && (this.loading = true);
       api.query(r).then(r => {
         if (!r.code) {
+          this.loading && (this.loading = false);
           time = null;
           this.from = r.data.from;
           this.$notify({
@@ -171,42 +251,70 @@ export default {
             message: "您可以查询快递啦!",
             type: "success"
           });
-          this.record();
+          // this.record();
         }
       });
     },
     set_query(r) {
+      !this.loading && (this.loading = true);
       api.query(r).then(r => {
         if (!r.code) {
+          this.loading && (this.loading = false);
           time = null;
           this.$notify({
             title: `查询成功`,
             message: "快递信息已经出现拉!",
             type: "success"
           });
-          this.list = data.reverse();
+          // this.list = data.reverse();
           this.con_visible = true;
         }
       });
     },
     record() {
-      api.get().then(r => {
-        if (r == "null") {
-          r = [];
-        }
-        this.list = r || [];
-      });
+      !this.loading && (this.loading = true);
+      api
+        .get(this.from)
+        .then(r => {
+          this.loading && (this.loading = false);
+          if (r == null || r == "null") {
+            r = [];
+            this.$message({
+              message:
+                "您还没有查过快递哦！，查询成功之后，我们就会帮您记录下哦！",
+              type: "warning"
+            });
+            return;
+          }
+          this.list = r || [];
+          this.$message({
+            message: "您有一个快递记录，点击个人中心，我的记录可以查看哦！",
+            type: "success"
+          });
+        })
+        .catch(e => {
+          this.loading && (this.loading = false);
+        });
     },
     getall() {
-      api.getuser().then(r => {
-        if (r == "null") {
-          r = [];
-        }
-        this.list = r || [];
-      });
+      !this.loading && (this.loading = true);
+      api
+        .getuser(this.from)
+        .then(r => {
+          this.loading && (this.loading = false);
+          if (r == null || r == "null") {
+            r = [];
+          }
+          this.list = r || [];
+        })
+        .catch(e => {
+          this.loading && (this.loading = false);
+        });
     },
     set(data) {
-      api.set(data).then(r => {
+      !this.loading && (this.loading = true);
+      api.set(this.from, data).then(r => {
+        this.loading && (this.loading = false);
         time = setInterval(() => {
           if (!time) {
             clearInterval(time);
@@ -225,10 +333,10 @@ export default {
         });
         return;
       }
-      if (this.list.length) {
-        this.con_visible = true;
-        return;
-      }
+      // if (this.list.length) {
+      //   this.con_visible = true;
+      //   return;
+      // }
       if (!this.item.com) {
         this.showkd = !this.showkd;
         this.com_act = !this.com_act;
@@ -253,11 +361,13 @@ export default {
         });
         return;
       }
+      !this.loading && (this.loading = true);
       axios
         .get(kuaidi_api, {
           params: this.item
         })
         .then(res => {
+          this.loading && (this.loading = false);
           let data = res.data.result;
           if (!data) {
             this.$message({
@@ -266,6 +376,7 @@ export default {
             });
             return;
           }
+          this.list = data.list;
           this.set(data.list);
         })
         .catch(function(error) {
@@ -295,11 +406,16 @@ export default {
     },
     command_fn(e) {
       if (e == "a") {
+        if (!this.list.length) {
+          this.$message({
+            type: "warning",
+            message: `快递记录为空，请先查询您的快递`
+          });
+          return;
+        }
         this.con_visible = true;
       }
-    },
-    init(obj) {},
-    reset() {}
+    }
   }
 };
 </script>
@@ -316,9 +432,17 @@ $color: #607778;
       justify-content: flex-end;
       display: flex;
       li {
+        &:hover {
+          color: #409eff;
+          background-color: #ecf5ff;
+        }
         a {
           text-decoration: none;
           color: $color;
+          &:hover {
+            color: #409eff;
+            background-color: #ecf5ff;
+          }
         }
         margin: 0 10px;
         font-size: 20px;
@@ -482,9 +606,33 @@ $color: #607778;
 }
 
 .el-dialog {
+  .rule-con {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    width: 100%;
+    p {
+      img {
+        padding: 0 10px;
+      }
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 30px;
+    }
+  }
   border-radius: 10px;
   width: 800px !important;
-  height: 500px !important;
+  height: 600px !important;
+  .el-step__description {
+    padding-right: 0 !important;
+    line-height: 30px !important;
+  }
+  .el-step__title {
+    color: $color !important;
+  }
   overflow: auto;
   .el-button--primary {
     background-color: $color !important;
@@ -534,6 +682,7 @@ $color: #607778;
   font-weight: bold;
   border: none !important;
 }
+
 .el-dropdown {
   span {
     color: $color;
@@ -541,6 +690,7 @@ $color: #607778;
     font-size: 20px !important;
   }
 }
+
 /**从上往下**/
 
 .bouncelnDown-enter-active,
@@ -621,6 +771,7 @@ $color: #607778;
     border-color: none;
   }
 }
+
 @media screen and (max-width: 1280px) {
   body {
     transform: scale(0.8) translateY(-120px);
