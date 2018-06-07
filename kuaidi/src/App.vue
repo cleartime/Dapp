@@ -332,7 +332,7 @@
     }
     .bg {
       height: 600px;
-      background: url("/static/bg.png") no-repeat center center;
+      background: url("@/assets/bg.png") no-repeat center center;
       width: 100vw;
       background-size: cover;
       .con {
