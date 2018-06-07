@@ -28,7 +28,7 @@
         </p>
       </div>
     </div>
-    <div class="bg">
+    <div class="bg" :style="backgroundDiv">
       <div class="con">
         <transition name="bouncelnDown" mode="out-in">
           <ul class="kd" v-if='showkd'>
@@ -144,6 +144,9 @@
       // 3362937148645
       // sto
       return {
+         backgroundDiv: {
+          backgroundImage: 'url(' + require('@/assets/bg.png') + ')',
+        },
         active: 0,
         help: false,
         rule: false,
@@ -331,9 +334,10 @@
       }
     }
     .bg {
+      background-repeat: no-repeat;
       height: 600px;
-      background: url("@/assets/bg.png") no-repeat center center;
       width: 100vw;
+      background-position: center center;
       background-size: cover;
       .con {
         position: relative;
