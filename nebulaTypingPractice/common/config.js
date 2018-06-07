@@ -25,23 +25,14 @@ var dapp = {
     content: '',
     from: '',
     getout() {
-    if (typeof (webExtensionWallet) === "undefined") {
-      MessageBox.alert("请先在谷歌浏览器安装星云链钱包插件", "提示", {
-        confirmButtonText: "确定",
-        callback: action => {
-          if (action === "confirm") {
-            window.open(
-              "https://github.com/ChengOrangeJu/WebExtensionWallet"
-            );
-            return false;
-          } else {
-            this.getout();
-          }
-        }
-      });
-      return false
+        if (typeof webExtensionWallet === "undefined") {
+        confirm('请先在谷歌浏览器安装星云链钱包插件', '');
+        window.open(
+            "https://github.com/ChengOrangeJu/WebExtensionWallet"
+        );
+        return false;
     }
-    return true
+    return true;
   },
    init() {
     return new Promise((resole, reject) => {
@@ -64,7 +55,7 @@ var dapp = {
     })
   },
   detail(){
-    if(status == 'ing'){
+    if(status == 'ing' && getObj('btnStart').value == '结束保存至星云链'){
          btnStartClick(1)
         return
     }
@@ -74,7 +65,7 @@ var dapp = {
         this.start().then(r=>{
             Notification({
                 title: `提示`,
-                message: "存储昵称成功!,开始练习打字把",
+                message: "存储昵称成功,开始练习打字吧",
                 type: "success"
               });
             btnStartClick()
@@ -235,7 +226,14 @@ start() {
     })
   }
 }
-dapp.init().then(()=>{
+
+
+
+new Vue({
+  el: '#app',
+  mounted: function () {
+  this.$nextTick(function () {
+      dapp.init().then(()=>{
     loadingInstance = Loading({
             lock: true,
             text: '正在加载...',
@@ -250,7 +248,7 @@ dapp.init().then(()=>{
 
         if((r1 == 'null'  || r1 == null ) && (r2 == 'null' || r2 == null)){
             MessageBox({
-              message: "您好，请好好使用星云打字练习工具把",
+              message: "您好，请开始使用星云打字练习工具吧",
               type: "warning"
             });
             return
@@ -278,3 +276,7 @@ dapp.init().then(()=>{
         }
     })
 })
+    })
+  }
+})
+

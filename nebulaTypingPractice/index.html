@@ -75,7 +75,7 @@
 		.dialogbox-back {z-index: 9999;}
 		</style>
 	</head>  
-	<body> 
+	<body > 
 		<script language="javascript" type="text/javascript">
  function addfavor(url,title){var ua=navigator.userAgent.toLowerCase();if(ua.indexOf("msie 8")>-1){external.AddToFavoritesBar(url,title,'');}else{try{window.external.addFavorite(url,title);}catch(e){try{window.sidebar.addPanel(title,url,'');}catch(e){alert("加入收藏失败，请使用键盘Ctrl+D进行添加");}}}return false;}
 
@@ -225,7 +225,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 <div id='hidead'>
 </div>
 
-	        <form action="" name="name_form" method="get" style="position: relative;left: -20px">
+	        <form id="app" action="" name="name_form" method="get" style="position: relative;left: -20px">
 		        <div class='row' style="display: flex;justify-content: center;">
 		          	<div class='span strong'>文章选择：</div>
 		          	<div class='span'>
@@ -369,7 +369,37 @@ Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true)
         autoRun = window.setInterval(timer, 1000)
     } 
     if(type) {
-    	dapp.end(`用时：${getObj('spanTime').innerHTML}，正确率：${getObj('spanRate').innerHTML}，速度：${getObj('spanSpeed').innerHTML}`);
+    	var text = document.getElementById('selText').value;
+    	var val = ''
+    	if(text == 'txtEn1'){
+			val = 'Source'
+    	}else if(text == 'txtEn2'){
+    		val = 'Challenge'
+    	}else if(text == 'txtEn3'){
+    		val = 'Go Out To'
+    	}else if(text == 'txtEn4'){
+    		val = 'My Dreams'
+    	}
+    	else if(text == 'txtCh1'){
+    		val = '百家姓'
+    	}
+    	else if(text == 'txtCh2'){
+    		val = '常用1500字'
+    	}
+    	else if(text == 'txtCh3'){
+    		val = '最早的文字'
+    	}
+    	else if(text == 'txtCh4'){
+    		val = '咖啡文化'
+    	}
+
+    	dapp.end(`文章选择：${val}，用时：${getObj('spanTime').innerHTML}，正确率：${getObj('spanRate').innerHTML}，速度：${getObj('spanSpeed').innerHTML}`).then(()=>{
+    		Notification({
+                title: `提示`,
+                message: "保存成功！",
+                type: "success"
+              });
+    	});
     	status = 'start';
         a.value = '开始打字练习'
     }
