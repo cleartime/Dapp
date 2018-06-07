@@ -285,11 +285,20 @@
     font-size: 16px;
     .nav {
       .menu {
+        align-items: center;
         margin-right: 10px;
         flex: 1;
         justify-content: flex-end;
         display: flex;
         li {
+          .el-button{
+            font-weight: bold;
+            color: $color!important;
+            font-size: 20px!important;
+            &:hover {
+              color: #409eff!important;
+            }
+          }
           &:hover {
             color: #409eff;
             background-color: #ecf5ff;
