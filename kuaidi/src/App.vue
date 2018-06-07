@@ -28,7 +28,7 @@
         </p>
       </div>
     </div>
-    <div class="bg">
+    <div class="bg" :style="backgroundDiv">
       <div class="con">
         <transition name="bouncelnDown" mode="out-in">
           <ul class="kd" v-if='showkd'>
@@ -122,6 +122,7 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import axios from "axios";
 import Api from "./untils/until";
 import company from "./untils/company";
@@ -159,6 +160,59 @@ export default {
         com: "",
         dtype: "",
         key: "e9ac621879183be591b4747bb4ae76ed"
+=======
+  import axios from "axios";
+  import Api from "./untils/until";
+  import company from "./untils/company";
+  import {
+    setTimeout,
+    setInterval,
+    clearInterval
+  } from "timers";
+  let time = null;
+  // ec241dbe0d93ef61582d3c10ac36f660cf16e8ca6b5998253955d5fede3a5cf5
+  // let api = new Api("n1k1WqwF6AKw4AoLvL9NWxwZUhiEBDBCvFi"); //text
+  let api = new Api("n1gqhmKjDqsFJ4D5kwjhxnqkqt4kcdMha9k"); //pro
+  let kuaidi_api = "http://v.juhe.cn/exp/index";
+  // if (!process.env.NODE_ENV === "production") {
+  // kuaidi_api = `${location.origin}/exp/index`;
+  // }
+  export default {
+    name: "App",
+    data() {
+      // 3362937148645
+      // sto
+      return {
+         backgroundDiv: {
+          backgroundImage: 'url(' + require('@/assets/bg.png') + ')',
+        },
+        active: 0,
+        help: false,
+        rule: false,
+        con_visible: false,
+        com_choose: false,
+        com_act: false,
+        input_act: false,
+        showkd: false,
+        comicon: "",
+        comlist: company,
+        list: [],
+        from: "",
+        item: {
+          // 3362937148645
+          no: "",
+          // sto
+          com: "",
+          dtype: "",
+          key: "e9ac621879183be591b4747bb4ae76ed"
+        }
+      };
+    },
+    created() {
+      if (!process.env.NODE_ENV !== "production") {
+        this.item.no = "3362937148645";
+        this.item.com = "sto";
+>>>>>>> 58ce745ac7ecf70dcdaa780c3313cb0c39d5f847
       }
     };
   },
@@ -271,6 +325,7 @@ export default {
 </script>
 
 <style lang='scss'>
+<<<<<<< HEAD
 $color: #607778;
 #app {
   color: $color;
@@ -289,6 +344,28 @@ $color: #607778;
         a {
           text-decoration: none;
           color: $color;
+=======
+  $color: #607778;
+  #app {
+    color: $color;
+    font-size: 16px;
+    .nav {
+      .menu {
+        align-items: center;
+        margin-right: 10px;
+        flex: 1;
+        justify-content: flex-end;
+        display: flex;
+        li {
+          .el-button{
+            font-weight: bold;
+            color: $color!important;
+            font-size: 20px!important;
+            &:hover {
+              color: #409eff!important;
+            }
+          }
+>>>>>>> 58ce745ac7ecf70dcdaa780c3313cb0c39d5f847
           &:hover {
             color: #409eff;
             background-color: #ecf5ff;
@@ -324,6 +401,7 @@ $color: #607778;
         }
       }
     }
+<<<<<<< HEAD
   }
   .bg {
     height: 600px;
@@ -371,6 +449,23 @@ $color: #607778;
           border-left: 1px solid #ccc;
           border-right: 1px solid #ccc;
           flex: 1;
+=======
+    .bg {
+      background-repeat: no-repeat;
+      height: 600px;
+      width: 100vw;
+      background-position: center center;
+      background-size: cover;
+      .con {
+        position: relative;
+        color: #fff;
+        width: 800px;
+        margin: 0 auto;
+        height: 500px;
+        .bot {
+          box-shadow: 0px 1px 20px 8px #596c70;
+          box-sizing: border-box;
+>>>>>>> 58ce745ac7ecf70dcdaa780c3313cb0c39d5f847
           width: 100%;
           height: 60px;
           line-height: 60px;
