@@ -1,0 +1,16 @@
+@import './reset.css';
+@import './variables.scss';
+@import './transition.scss';
+@import './media.scss';
+
+// 隐藏滚动条
+::-webkit-scrollbar {
+  width: 0px;
+  height: 1px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+}
+

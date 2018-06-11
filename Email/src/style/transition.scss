@@ -1,0 +1,296 @@
+/**浅入浅出**/
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .3s;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+
+/**弹窗浅入浅出**/
+
+.fadePopup-enter-active,
+.fadePopup-leave-active {
+  transition: opacity .3s;
+}
+
+.fadePopup-enter,
+.fadePopup-leave-active {
+  position: absolute;
+  opacity: 0;
+}
+
+/**从上往下**/
+
+.bouncelnDown-enter-active,
+.bouncelnDown-leave-active {
+  transition: all .5s;
+}
+
+.bouncelnDown-enter,
+.bouncelnDown-leave-active {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+/**从下往上**/
+
+.bouncelnUp-enter-active,
+.bouncelnUp-leave-active {
+  transition: all .3s;
+}
+
+.bouncelnUp-enter,
+.bouncelnUp-leave-active {
+  opacity: 0;
+  transform: translateY(-50%);
+}
+
+/**从左往右**/
+
+.bouncelnRight-enter-active,
+.bouncelnRight-leave-active {
+  transition: all .2s;
+}
+
+.bouncelnRight-enter,
+.bouncelnRight-leave-active {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+/**从右往左**/
+
+.bouncelnLeft-enter-active,
+.bouncelnLeft-leave-active {
+  transition: all .5s;
+}
+
+.bouncelnLeft-enter,
+.bouncelnLeft-leave-active {
+  opacity: 0;
+  transform: translateX(-200px);
+}
+
+/**放大1.5倍**/
+
+.pulse-enter-active,
+.pulse-leave-active {
+  transition: all .5s;
+}
+
+.pulse-enter,
+.pulse-leave-active {
+  opacity: 0;
+  transform: scale(1.5);
+}
+
+/**popover组件延迟放大**/
+
+.popover-enter-active,
+.smallToBig-leave-active {
+  transition: all .4s .4s
+}
+
+.popover-enter,
+.smallToBig-leave-active {
+  opacity: 0;
+  transform: scale(0);
+}
+
+/**从小到大**/
+
+.smallToBig-enter-active,
+.smallToBig-leave-active {
+  transition: all .2s
+}
+
+.smallToBig-enter,
+.smallToBig-leave-active {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+/**协议弹窗**/
+
+.protocol-enter-active,
+.protocol-leave-active {
+  transition: all .3s
+}
+
+.protocol-enter,
+.protocol-leave-active {
+  transform: scale(0.9);
+}
+
+.slide-right-enter-active,
+.slide-left-enter-active {
+  transition: all .5s cubic-bezier(.36, .66, .04, 1);
+}
+
+.slide-right-leave-active,
+.slide-left-leave-active {
+  transition: all .5s cubic-bezier(.36, .66, .04, 1);
+}
+
+.slide-right-enter {
+  opacity: 1;
+  transform: translate3d(100%, 0, 0)
+}
+
+.slide-right-leave-active {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+  z-index: 10;
+}
+
+.slide-left-enter {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0)
+}
+
+.slide-left-leave-active {
+  opacity: 1;
+  transform: translate3d(100%, 0, 0);
+  z-index: 10;
+}
+
+//路由切换
+.router-slid-enter-active,
+.router-slid-leave-active {
+  transition: all .3s;
+}
+
+.router-slid-enter,
+.router-slid-leave-active {
+  transform: translate3d(2rem, 0, 0);
+  opacity: 0;
+}
+
+//全屏切换
+.rightFull-enter-active {
+  animation: rightFull .5s;
+}
+
+.rightFull-leave-active {
+  animation: rightFull .5s reverse;
+}
+
+@keyframes rightFull {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .3s;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+
+.bouncelnRight-enter-active,
+.bouncelnRight-leave-active {
+  transition: all .3s;
+}
+
+.bouncelnRight-enter,
+.bouncelnRight-leave-active {
+  opacity: 0;
+  transform: translate(100%);
+}
+
+.pulse-enter-active,
+.pulse-leave-active {
+  transition: all .3s;
+}
+
+.pulse-enter,
+.pulse-leave-active {
+  opacity: 0;
+  backface-visibility: hidden;
+  transform: rotateY(90deg);
+}
+
+/**登录**/
+
+.login-enter-active,
+.login-leave-active {
+  transition: all 1s;
+}
+
+.login-enter,
+.login-leave-active {
+  transform: translateY(-50%);
+}
+
+// 用户等级从左到右
+.lv-toRight-enter-active,
+.lv-toRight-leave-active {
+  transition: all .3s;
+}
+
+.lv-toRight-enter,
+.lv-toRight-leave-active {
+  transform: translate3d(-2em, 0, 0);
+  opacity: 0;
+}
+
+// 用户等级从右到左
+.lv-toLeft-enter-active,
+.lv-toLeft-leave-active {
+  transition: all .3s;
+}
+
+.lv-toLeft-enter,
+.lv-toLeft-leave-active {
+  transform: translate3d(2em, 0, 0);
+  opacity: 0;
+}
+
+//常见问题
+.qusetion-move {
+  transition: all .3s;
+}
+
+// 单选框和复选框
+@keyframes radio {
+  from {
+    transform: scale(.5)
+  }
+  to {
+    transform: scale(1)
+  }
+}
+
+//从中间到左边
+@keyframes centerToleft{
+  from{
+    opacity: 0;
+    transform: translateX(100%)
+  }
+  to{
+    opacity: 1;
+    transform: translateX(0)
+  }
+}
+//从中间到右边
+@keyframes centerTorigth{
+  from{
+    opacity: 0;
+    transform: translateX(-100%)
+  }
+  to{
+    opacity: 1;
+    transform: translateX(0)
+  }
+}
