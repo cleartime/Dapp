@@ -16,7 +16,8 @@ function checkNebpay() {
 let nebulas = require("nebulas"),
     Account = nebulas.Account,
     neb = new nebulas.Neb();
-neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
+// neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
+neb.setRequest(new nebulas.HttpRequest("http://localhost:8685"));
 let from = Account.NewAccount().getAddressString();
 
 let NebPay = require("nebpay"); //https://github.com/nebulasio/nebPay
@@ -28,22 +29,13 @@ class until {
         this.dappAddress = dappAddress;
     }
     set(obj) {
-        let start = 'abc';
-        let end = 'abcd';
         let to = this.dappAddress;
-        let value = "0";
-<<<<<<< HEAD
-        let callFunction = "set"
-        let callArgs = "[\"" + start + "\",\"" + end + "\"]"
-=======
-        let callFunction = "set";
-        obj.switch = '1';
+        let callFunction = "add_kit_to_list";
         var callArgs = JSON.stringify([obj]);
->>>>>>> 77a4a32c341ac3ffad7df273b262777ee380ef90
         // let callArgs = "[" + JSON.stringify(obj) + "]"
         // var callArgs = "[\"" + JSON.stringify(str) + "\"]"
         let cbPush = this.res;
-        return Promise.resolve(nebPay.call(to, value, callFunction, callArgs, { //使用nebpay的call接口去调用合约,
+        return Promise.resolve(nebPay.call(to, '0', callFunction, callArgs, { //使用nebpay的call接口去调用合约,
             listener: cbPush //设置listener, 处理交易返回信息
         }));
     }
@@ -73,11 +65,7 @@ class until {
         var gas_price = "1000000"
         var gas_limit = "2000000"
         var callFunction = "get";
-<<<<<<< HEAD
-        var callArgs = "[\"" + start + "\"]"; //in the form of ["args"]
-=======
         var callArgs = JSON.stringify([obj.title]);
->>>>>>> 77a4a32c341ac3ffad7df273b262777ee380ef90
         var contract = {
             "function": callFunction,
             "args": callArgs
@@ -91,28 +79,6 @@ class until {
 	        })
        })
     }
-<<<<<<< HEAD
-    del(index){
-        var value = "0";
-        var nonce = "0"
-        var start  = 'abc';
-        var gas_price = "1000000"
-        var gas_limit = "2000000"
-        var callFunction = "delname";
-        var callArgs = "[\"" + start + "\"]"; //in the form of ["args"]
-        var contract = {
-            "function": callFunction,
-            "args": callArgs
-        }
-
-       return new Promise((resole,reject)=>{
-            neb.api.call(from, this.dappAddress, value, nonce, gas_price, gas_limit, contract).then( (resp) =>{
-                resole(JSON.parse(resp.result))
-            }).catch( (err)=> {
-                reject(err.message)
-            })
-       })
-=======
     del(obj, key){
         this.isOnly(obj, key).then(r=>{
             if(!r){
@@ -131,7 +97,6 @@ class until {
                 listener: cbPush //设置listener, 处理交易返回信息
             }));
         })
->>>>>>> 77a4a32c341ac3ffad7df273b262777ee380ef90
     }
     len(){
     	var value = "0";
@@ -178,8 +143,9 @@ class until {
         var nonce = "0"
         var gas_price = "1000000"
         var gas_limit = "2000000"
-        var callFunction = "getAll";
-        var callArgs = "[]"; //in the form of ["args"]
+        var num = 10;
+        var callFunction = "query_hot_kit";
+        var callArgs = JSON.stringify([num]);
         var contract = {
             "function": callFunction,
             "args": callArgs
